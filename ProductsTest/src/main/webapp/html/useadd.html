@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加入會員</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #ff7e5f;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff7e5f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #e76f51;
+        }
+
+        #timeline-embed {
+            width: 100%;
+            height: 500px;
+            margin-top: 40px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>加入會員</h1>
+    <form id="registerForm" action="../UseInsert" method="post">
+        <label for="username">會員帳號:</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="email">郵件:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="password">密碼:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <input type="submit" value="加入會員">
+    </form>
+</div>
+
+<div id="timeline-embed"></div>
+
+<script>
+    $(document).ready(function() {
+        $('#registerForm').on('submit', function(e) {
+            e.preventDefault(); // 阻止表單提交
+            const form = this; // 保存表單對象
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "註冊成功!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        form.submit(); // 提交表單
+                    });
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "註冊過程中發生錯誤，請稍後再試！"
+                    });
+                }
+            });
+        });
+
+        var additionalOptions = {
+            hash_bookmark: true
+        };
+
+        var timelineData = {
+            "title": {
+                "text": {
+                    "headline": "會員註冊歷史",
+                    "text": "<p>以下是會員註冊的歷史事件。</p>"
+                }
+            },
+            "events": [
+                {
+                    "media": {
+                        "url": "https://www.example.com/image1.jpg",
+                        "caption": "註冊成功"
+                    },
+                    "start_date": {
+                        "year": "2024",
+                        "month": "5",
+                        "day": "20"
+                    },
+                    "text": {
+                        "headline": "第一個會員註冊",
+                        "text": "<p>第一個會員在此日期註冊。</p>"
+                    }
+                },
+                {
+                    "media": {
+                        "url": "https://www.example.com/image2.jpg",
+                        "caption": "註冊成功"
+                    },
+                    "start_date": {
+                        "year": "2024",
+                        "month": "5",
+                        "day": "22"
+                    },
+                    "text": {
+                        "headline": "第二個會員註冊",
+                        "text": "<p>第二個會員在此日期註冊。</p>"
+                    }
+                }
+            ]
+        };
+
+        window.timeline = new TL.Timeline('timeline-embed', timelineData, additionalOptions);
+    });
+</script>
+
+</body>
+</html>

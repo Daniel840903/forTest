@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會員登錄</title>
+<link rel="stylesheet" href="../css/New.css">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://kit.fontawesome.com/a260a05f7c.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(function() {
+    let index = 0;
+    $('.pages li').eq(0).css('background', 'white');
+    $('.pages li').on('mouseenter', function() {
+        index = $(this).index();
+        moveImg();
+    });
+
+    let slideLiLength = $('.pages li').length;
+    $('#slideNext').click(function() {
+        index++;
+        if (index >= slideLiLength) {
+            index = 0;
+        }
+        moveImg();
+    });
+
+    $('#slidePrev').click(function() {
+        index--;
+        if (index < 0) {
+            index = slideLiLength - 1;
+        }
+        moveImg();
+    });
+
+    function moveImg() {
+        let slideMove = 0 - index * 600;
+        $('.slide-imgs').css('left', slideMove);
+        $('.pages li').eq(index).css('background', 'white').siblings().css('background', 'transparent');
+    }
+
+    setInterval(autoImg, 2000);
+    function autoImg() {
+        index++;
+        if (index >= slideLiLength) {
+            index = 0;
+        }
+        moveImg();
+    }
+
+    $('.tn').click(function (e) {
+        e.preventDefault(); // Prevent the form from submitting immediately
+        let timerInterval;
+        Swal.fire({
+          title: "會員查詢中",
+          html: "I will close in <b></b> milliseconds.",
+          timer: 1500,
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          }
+        }).then((result) => {
+          if (result.dismiss === Swal.DismissReason.timer) {
+            $('form').submit(); // Submit the form after the alert closes
+          }
+        });
+    });
+});
+</script>
+</head>
+<body>
+
+<jsp:include page="header.jsp" />
+
+<div class="container">
+    <h1>會員登錄</h1>
+    <form action="../UseLog" method="post">
+        <label for="username">用戶名:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">密碼:</label>
+        <input type="password" id="password" name="password" required>
+        <button class="tn" type="submit">登錄</button>
+    </form>
+    <div class="links">
+        <a href="useUpdate.html">忘記帳號密碼</a> 
+        <a href="useadd.html">加入會員</a>
+    </div>
+</div>
+
+<!-- 廣告圖片 -->
+<div class="wrap">
+    <ul class="slide-imgs">
+        <li><img src="../css/fb.jpg"></li>
+        <li><img src="../css/4.jpg"></li>
+        <li><img src="../css/2.jpg"></li>
+        <li><img src="../css/3.jpg"></li>
+        <li><img src="../css/6.png"></li>
+    </ul>
+    <div class="slide-arrow left" id="slidePrev">
+        <i class="fas fa-chevron-left"></i>
+    </div>
+    <div class="slide-arrow right" id="slideNext">
+        <i class="fas fa-chevron-right"></i>
+    </div>
+    <ul class="pages">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+
+<div class="set">
+    <h3>手機門市</h3>
+    <p>
+        地址: 台北市復興南路一段390號2樓<br> 
+        電話: (02)6631-6588<br> 
+        網址: <a href="http://www.iSpan.com.tw">www.iSpan.com.tw</a>
+    </p>
+    <div class="map-title">門市據點</div>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3616.437657873824!2d121.21960007595504!3d24.98524034025207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34682183e7b783c3%3A0xf0ebfba2069b6158!2z6IGW5b635Z-6552j5a246Zmi!5e0!3m2!1szh-TW!2stw!4v1716945481344!5m2!1szh-TW!2stw"
+        width="300" height="150" style="border: 0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+
+<jsp:include page="footer.jsp" />
+
+    
+</body>
+</html>

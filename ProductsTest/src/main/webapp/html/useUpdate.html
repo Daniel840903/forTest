@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>會員資料更新</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 350px;
+        }
+        h1 {
+            font-size: 26px;
+            color: #00796b;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            color: #00796b;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #00796b;
+            border-radius: 5px;
+            background-color: #e0f2f1;
+        }
+        input[type="submit"] {
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #004d40;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://kit.fontawesome.com/a260a05f7c.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>會員資料更新</h1>
+        <form id="updateForm" action="../UseUpdate" method="post">
+            <label for="id">會員編號:</label>
+            <input type="text" id="id" name="id" required>
+            <label for="username">會員帳號:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="email">郵件:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">密碼:</label>
+            <input type="password" id="password" name="password" required>
+            <input type="submit" value="會員更新">
+        </form>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault(); // 阻止表單提交
+                const form = this; // 保存表單對象
+                Swal.fire({
+                    title: "Do you want to save the changes?",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Save",
+                    denyButtonText: `Don't save`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Saved!",
+                            text: "會員資料更新中",
+                            icon: "success",
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        setTimeout(() => {
+                            form.submit(); // 提交表單
+                        }, 3000); // 3秒後提交表單
+                    } else if (result.isDenied) {
+                        Swal.fire("Changes are not saved", "", "info");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

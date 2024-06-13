@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會員資料</title>
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ced4da;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>會員資料</h1>
+    <table>
+        <tr>
+            <th>欄位</th>
+            <th>資料</th>
+        </tr>
+        <tr>
+            <td>會員編號</td>
+            <td id="userId">12345</td>
+        </tr>
+        <tr>
+            <td>帳號</td>
+            <td id="username">user123</td>
+        </tr>
+        <tr>
+            <td>電子郵件</td>
+            <td id="email">user123@example.com</td>
+        </tr>
+    </table>
+    <button onclick="logout()">登出</button>
+</div>
+
+<script>
+function logout() {
+    // 這裡可以加上登出邏輯，例如清除session或者重定向到登出頁面
+    alert('登出成功');
+    window.location.href = 'userlog.html';
+}
+</script>
+                                
+</body>
+</html>

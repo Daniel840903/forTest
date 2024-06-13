@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>會員刪除</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* 新增 */
+        height: 300px; /* 確保容器有固定高度 */
+    }
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    input[type="submit"] {
+        background-color: #d9534f;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    input[type="submit"]:hover {
+        background-color: #c9302c;
+    }
+    .back-link {
+        display: block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #007bff;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://kit.fontawesome.com/a260a05f7c.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>刪除會員</h1>
+            <form action="../UseDelete" method="post">
+                <label for="id">會員編號:</label>
+                <input type="text" id="id" name="id" required>
+                <input type="submit" value="刪除">
+            </form>
+        </div>
+        <a href="foot.html" class="back-link">返回首頁</a>
+    </div>
+<script>
+$(document).ready(function() {
+    $('form').on('submit', function(e) {
+        e.preventDefault(); // 阻止表單提交
+        const form = this; // 保存表單對象
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "會員刪除中",
+                    icon: "success",
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                setTimeout(() => {
+                    form.submit(); // 提交表單
+                }, 3000); // 3秒後提交表單
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
