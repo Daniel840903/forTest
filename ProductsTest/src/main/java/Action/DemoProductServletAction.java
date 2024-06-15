@@ -21,14 +21,9 @@ import unit.HibernateUtil;
 @WebServlet("/DemoProductServletAction")
 public class DemoProductServletAction extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private IProductService productService;
-
-    @Override
-    public void init() {
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
-        productService = new ProductService(session);
-    }
+//    private IProductService productService;
+//    SessionFactory factory = HibernateUtil.getSessionFactory();
+//	Session session = factory.getCurrentSession();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,49 +37,45 @@ public class DemoProductServletAction extends HttpServlet {
 
     private void processAction(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         String action = request.getParameter("action");
-
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
-        Transaction tx = null;
-
+        System.out.println(action);
+        
+       
         try {
-            tx = session.beginTransaction();
-            switch (action) {
-                case "insert":
-                    insertProduct(request, response);
-                    break;
-                case "delete":
-                    deleteProduct(request, response);
-                    break;
-                case "update":
-                    updateProduct(request, response);
-                    break;
-                case "search":
-                    searchProduct(request, response);
-                    break;
-                case "like":
-                    likeProduct(request, response);
-                    break;
-                default:
-                    listProduct(request, response);
-                    break;
-            }
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            throw new ServletException(e);
-        } finally {
-            out.close();
-        }
-    }
+			switch (action) {
+			case "insert":
+				insertProduct(request, response);
+				break;
+			case "delete":
+				deleteProduct(request, response);
+				break;
+			case "update":
+				updateProduct(request, response);
+				break;
+			case "search":
+				searchProduct(request, response);
+				break;
+			case "like":
+				likeProduct(request, response);
+				break;
+			default:
+				listProduct(request, response);
+				break;
+			}
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+	}
+         
 
     private void listProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> listProduct = productService.findAll();
+    	SessionFactory factory = HibernateUtil.getSessionFactory();
+    	Session session = factory.getCurrentSession();
+    	
+    	
+    	ProductService pService = new ProductService(session);
+    	List<Product> listProduct = pService.findAll();
+    	
         request.setAttribute("listProduct", listProduct);
         request.getRequestDispatcher("/jsp/ProductHome.jsp").forward(request, response);
     }
@@ -94,27 +85,35 @@ public class DemoProductServletAction extends HttpServlet {
         String price = request.getParameter("price");
         String description = request.getParameter("description");
         String stockQuantity = request.getParameter("stockQuantity");
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.getCurrentSession();
+        ProductService pService = new ProductService(session);
 
         Product newProduct = new Product(productName, price, description, stockQuantity);
-        productService.insert(newProduct);
+        pService.insert(newProduct);
         response.sendRedirect("DemoProductServletAction?action=list");
     }
 
     private void updateProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String productidParam = request.getParameter("productid");
         int productid = Integer.parseInt(productidParam);
+        
         String productName = request.getParameter("productName");
         String price = request.getParameter("price");
         String description = request.getParameter("description");
         String stockQuantity = request.getParameter("stockQuantity");
 
-        Product product = productService.findById(productid);
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.getCurrentSession();
+        ProductService pService = new ProductService(session);
+        
+        Product product = pService.findById(productid);
         if (product != null) {
             product.setProductName(productName);
             product.setPrice(price);
             product.setDescription(description);
             product.setStockQuantity(stockQuantity);
-            productService.update(product);
+            pService.update(product);
         }
 
         response.sendRedirect("DemoProductServletAction?action=list");
@@ -123,14 +122,21 @@ public class DemoProductServletAction extends HttpServlet {
     
     private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int productid = Integer.parseInt(request.getParameter("productid"));
-        productService.deleteById(productid);
-            response.sendRedirect("DemoProductServletAction?action=list");       
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.getCurrentSession();
+        ProductService pService = new ProductService(session);
+        pService.deleteById(productid);
+        response.sendRedirect("DemoProductServletAction?action=list");       
     }
 
 
     private void searchProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productid = Integer.parseInt(request.getParameter("productid"));
-        Product product = productService.findById(productid);
+    	int productid = Integer.parseInt(request.getParameter("productid"));
+    	SessionFactory factory = HibernateUtil.getSessionFactory();
+    	Session session = factory.getCurrentSession();
+    	ProductService pService = new ProductService(session);
+//    	System.out.println(productid);
+        Product product = pService.findById(productid);
 
         request.setAttribute("product", product);
         request.getRequestDispatcher("/jsp/ProductSearch.jsp").forward(request, response);
@@ -138,10 +144,12 @@ public class DemoProductServletAction extends HttpServlet {
 
     private void likeProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+        	SessionFactory factory = HibernateUtil.getSessionFactory();
+        	Session session = factory.getCurrentSession();
+        	ProductService pService = new ProductService(session);
             String productName = request.getParameter("productName");
-            List<Product> listProduct = productService.getLikeProducts(productName);
+            List<Product> listProduct = pService.getLikeProducts(productName);            
             request.setAttribute("listProduct", listProduct);
-
             request.getRequestDispatcher("/jsp/ProductHome.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

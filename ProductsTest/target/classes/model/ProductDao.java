@@ -3,79 +3,54 @@ package model;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-public class ProductDao {
+public class ProductDao implements IProduct {
 
     private Session session;
 
     public ProductDao(Session session) {
         this.session = session;
     }
-
+@Override
     public Product findById(int id) {
         return session.get(Product.class, id);
     }
-
+@Override
     public List<Product> findAll() {
         Query<Product> query = session.createQuery("from Product", Product.class);
         return query.list();
     }
-
-    public Product insert(Product product) {
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.persist(product);
-            System.out.println(product);
-            tx.commit();
-            return product;
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            return null;
+@Override
+    public Product insert(Product insterBean) {
+        session.persist(insterBean);
+        session.flush();
+        return insterBean;
         }
+@Override
+    public Product update(Product updateBean) {
+        Product resultBean = session.get(Product.class,updateBean.getProductid());
+        if (resultBean != null) {
+            resultBean.setProductName(updateBean.getProductName());
+            resultBean.setPrice(updateBean.getPrice());
+            resultBean.setDescription(updateBean.getDescription());
+            resultBean.setStockQuantity(updateBean.getStockQuantity());
+            session.update(resultBean);
+            session.flush();
+        }
+        return resultBean;
+        
     }
 
-
-    public Product update(Product product) {
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.update(product);
-            tx.commit();
-            return product;
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
+@Override
     public boolean deleteById(int id) {
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            Product product = session.get(Product.class, id);
-            if (product != null) {
-                session.remove(product);
-                tx.commit();
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            return false;
+        Product deleteBean = session.get(Product.class,id);
+        if(deleteBean!=null) {
+        	session.remove(deleteBean);
+        	session.flush();
+        	return true;
         }
+        return false;
     }
 
 
